@@ -1,1 +1,15 @@
+\.idea/
+# Compiled class file
 *.class
+
+# Log files
+*.log
+
+# JAR packages
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Gradle build files
+build/*
+gradle/*
+.gradle/*
