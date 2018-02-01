@@ -65,6 +65,8 @@ public class MainTest {
         try {
             Server server = ContinuousIntegrationServer.createServer(8080);
             assertEquals("STARTED", server.getState());
+            server.stop();
+            server.join();
         } catch (Exception e) {
             fail("Exception in server creation: \n" + e);
         }
