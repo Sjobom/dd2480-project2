@@ -17,7 +17,7 @@ public class MainTest {
     public void testServerCreation(){
         // Contract: Test that the createServer-method start the server
         try {
-            Server server = ContinuousIntegrationServer.createServer(8080);
+            ContinuousIntegrationServer server = ContinuousIntegrationServer.createServer(8080);
             assertEquals("STARTED", server.getState());
         } catch (Exception e) {
             fail("Exception in server creation: \n" + e);

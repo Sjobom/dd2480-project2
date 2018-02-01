@@ -133,17 +133,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
     // start the CI server in command line
-    public static Server createServer(int port) throws Exception
+    public static ContinuousIntegrationServer createServer(int port) throws Exception
     {
         Server server = new Server(port);
-        server.setHandler(new ContinuousIntegrationServer());
+        ContinuousIntegrationServer ci_server = new ContinuousIntegrationServer();
+        server.setHandler(ci_server);
         server.start();
         //server.join();
-        return server;
+        return ci_server;
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = createServer(8080);
+        ContinuousIntegrationServer server = createServer(8080);
         System.out.println("Server: " + server.getState());
     }
 }
