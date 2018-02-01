@@ -12,8 +12,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-//More imports might be needed
-import org.eclipse.jgit.api.Git;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
