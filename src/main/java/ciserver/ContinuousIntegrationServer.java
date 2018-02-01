@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +38,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // choose action with regard to target route
         switch(route) {
             case "/webhook":
-                this.tryIntegration();
+                this.tryIntegration(baseRequest);
                 this.setResponse200(response, "webhook");
                 break;
             case "/build":
@@ -58,20 +59,33 @@ public class ContinuousIntegrationServer extends AbstractHandler
     /**
      * Perform all the continuous integration tasks
      */
-    void tryIntegration() {
-        // 1st clone the repository
-        this.cloneRepository();
-        // 2nd compile the code
-        this.compileCode();
-        // 3rd build the code
-        this.runTests();
+    void tryIntegration(Request baseRequest) {
+        try {
+            // 1st clone the repository
+            String branch = "NO DATA";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(baseRequest.getInputStream()));
+            if(reader != null) {
+                branch = reader.readLine();
+            }
+
+            this.cloneRepository(branch);
+
+
+            // 2nd compile the code
+            this.compileCode();
+            // 3rd build the code
+            this.runTests();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Clone the repository into temporary storage
      */
-    void cloneRepository() {
-
+    void cloneRepository(String branch) {
+        System.out.println("Branch: " + branch);
     }
 
     /**
