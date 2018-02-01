@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -60,29 +61,47 @@ public class ContinuousIntegrationServer extends AbstractHandler
      * Perform all the continuous integration tasks
      */
     void tryIntegration(Request baseRequest) {
+        /* get payload from HTTP request and create JSON object */
         String payload = baseRequest.getParameter("payload");
         if (payload == null){
+            System.err.println("Error: there was no payload present in the HTTP Request!");
             return;
         }
         JSONObject jsonObject = new JSONObject(payload);
-        String ref = jsonObject.getString("ref");
-        String[] ref_parts = ref.split("/");
-        String branch = ref_parts[ref_parts.length - 1];
-
-        // 1st clone the repository
-        this.cloneRepository(branch);
-        // 2nd compile the code
-        this.compileCode();
-        // 3rd build the code
-        this.runTests();
+            // 1st clone the repository
+            this.cloneRepository(jsonObject);
+            // 2nd compile the code
+            this.compileCode();
+            // 3rd build the code
+            this.runTests();
 
     }
 
     /**
      * Clone the repository into temporary storage
      */
-    void cloneRepository(String branch) {
-        System.out.println("Branch: " + branch);
+    public void cloneRepository(JSONObject jsonObject) throws JSONException{
+        // get branch name
+        String ref = jsonObject.getString("ref");
+        String[] ref_parts = ref.split("/");
+        String branch = ref_parts[ref_parts.length - 1];
+
+        // get ssh url
+        String ssh_url = jsonObject.getJSONObject("repository").getString("ssh_url");
+
+        // info about action
+        System.out.println("Cloning branch " + branch.toUpperCase() + " from the " + ssh_url.toUpperCase() + " repo");
+
+        // create and execute the clone command
+//        String[] clone_command = new String[4];
+//        clone_command[0] = "git";
+//        clone_command[1] = "clone";
+//        clone_command[2] = "--branch=" + branch;
+//        clone_command[3] = ssh_url;
+        String clone_command = "git clone --branch=" + branch + " " + ssh_url;
+        System.out.println("Result from cloning: " + ShellCommand.exec(clone_command));
+
+
     }
 
     /**
