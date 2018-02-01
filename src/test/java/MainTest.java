@@ -22,7 +22,8 @@ public class MainTest {
         } catch (Exception e) {
             fail("Exception in server creation: \n" + e);
         }
-
+    }
+    
     @Test
     public void test1() {
         //contract: Tests that ShellCommand class can execute
