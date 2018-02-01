@@ -9,13 +9,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.JSONObject;
 
 
 /**
@@ -60,25 +60,22 @@ public class ContinuousIntegrationServer extends AbstractHandler
      * Perform all the continuous integration tasks
      */
     void tryIntegration(Request baseRequest) {
-        try {
-            // 1st clone the repository
-            String branch = "NO DATA";
-            BufferedReader reader = new BufferedReader(new InputStreamReader(baseRequest.getInputStream()));
-            if(reader != null) {
-                branch = reader.readLine();
-            }
-
-            this.cloneRepository(branch);
-
-
-            // 2nd compile the code
-            this.compileCode();
-            // 3rd build the code
-            this.runTests();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        String payload = baseRequest.getParameter("payload");
+        if (payload == null){
+            return;
         }
+        JSONObject jsonObject = new JSONObject(payload);
+        String ref = jsonObject.getString("ref");
+        String[] ref_parts = ref.split("/");
+        String branch = ref_parts[ref_parts.length - 1];
+
+        // 1st clone the repository
+        this.cloneRepository(branch);
+        // 2nd compile the code
+        this.compileCode();
+        // 3rd build the code
+        this.runTests();
+
     }
 
     /**
