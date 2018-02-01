@@ -4,7 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,8 +41,13 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 this.setResponse200(response, "webhook");
                 break;
             case "/build":
-                this.fetchBuild();
-                this.setResponse200(response, "build");
+                String buildHistory = this.fetchBuild(m.group(2));
+                // if the requested build is not found, return 404 Not Found
+                if (buildHistory != null) {
+                    this.setResponse200(response, buildHistory);
+                } else {
+                    this.setResponse404(response);
+                }
                 break;
             default:
                 this.setResponse404(response);
@@ -80,10 +89,28 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
     /**
-     * Get the requested build
+     * Get information about a previous build
+     * @param buildID the ID of the previous build
+     * @return HTML-file with build-information or null if no such build
      */
-    void fetchBuild() {
-
+    String fetchBuild(String buildID) {
+        String buildPath = "ci-history/" + buildID + ".html";
+        if (Files.exists(Paths.get(buildPath))) {
+            StringBuilder buildHistory = new StringBuilder();
+            try (BufferedReader in = new BufferedReader(new FileReader(buildPath))){
+                String s;
+                while ((s = in.readLine()) != null) {
+                    buildHistory.append(s);
+                    buildHistory.append("\n");
+                }
+            } catch (IOException e) {
+                System.err.println("There was an error reading from '" + buildPath + "'");
+                return null;
+            }
+            return buildHistory.toString();
+        } else {
+            return null;
+        }
     }
 
     /**
