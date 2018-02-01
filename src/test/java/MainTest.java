@@ -1,5 +1,5 @@
-import ciserver.ContinuousIntegrationServer;
 import org.eclipse.jetty.server.Server;
+import ciserver.*;
 import org.junit.Test;
 
 import static junit.framework.TestCase.fail;
@@ -13,7 +13,6 @@ public class MainTest {
     //    assertEquals(oracle, value);
     //}
 
-
     @Test
     public void testServerCreation(){
         // Contract: Test that the createServer-method start the server
@@ -24,7 +23,11 @@ public class MainTest {
             fail("Exception in server creation: \n" + e);
         }
 
-
-
+    @Test
+    public void test1() {
+        //contract: Tests that ShellCommand class can execute
+        //a given command
+        String r = ShellCommand.exec("echo test");
+        assertEquals("test\n", r);
     }
 }
