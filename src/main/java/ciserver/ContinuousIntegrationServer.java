@@ -49,6 +49,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
                     this.setResponse404(response);
                 }
                 break;
+            case "/status":
+                this.setResponse200(response, "CI server is up & running!");
+                break;
             default:
                 this.setResponse404(response);
         }
