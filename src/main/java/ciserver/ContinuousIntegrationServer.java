@@ -51,6 +51,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
                     this.setResponse404(response);
                 }
                 break;
+            case "/status":
+                this.setResponse200(response, "CI server is up & running!");
+                break;
             default:
                 this.setResponse404(response);
         }
@@ -69,18 +72,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
         }
         JSONObject jsonObject = new JSONObject(payload);
             // 1st clone the repository
-            this.cloneRepository(jsonObject);
+            cloneRepository(jsonObject);
             // 2nd compile the code
-            this.compileCode();
+            compileCode();
             // 3rd build the code
-            this.runTests();
+            runTests();
 
     }
 
     /**
      * Clone the repository into temporary storage
      */
-    public void cloneRepository(JSONObject jsonObject) throws JSONException{
+    public static void cloneRepository(JSONObject jsonObject) throws JSONException{
         // get branch name
         String ref = jsonObject.getString("ref");
         String[] ref_parts = ref.split("/");
@@ -107,14 +110,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
     /**
      * Run the compile-procedure for the repository
      */
-    void compileCode() {
+    public static void compileCode() {
 
     }
 
     /**
      * Run the test-suite for the repository
      */
-    void runTests() {
+    public static void runTests() {
 
     }
 
@@ -163,18 +166,18 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
     // start the CI server in command line
-    public static ContinuousIntegrationServer createServer(int port) throws Exception
+    public static Server createServer(int port) throws Exception
     {
         Server server = new Server(port);
-        ContinuousIntegrationServer ci_server = new ContinuousIntegrationServer();
-        server.setHandler(ci_server);
+        server.setHandler(new ContinuousIntegrationServer());
         server.start();
-        //server.join();
-        return ci_server;
+        // server.join() has to be done after the object is returned if it is wanted
+        return server;
     }
 
     public static void main(String[] args) throws Exception {
-        ContinuousIntegrationServer server = createServer(8080);
+        Server server = createServer(8080);
         System.out.println("Server: " + server.getState());
+        server.join();
     }
 }

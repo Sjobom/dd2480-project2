@@ -2,23 +2,71 @@ import org.eclipse.jetty.server.Server;
 import ciserver.*;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.stream.Collectors;
+
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 public class MainTest {
 
-    // @Test
-    // public void testMethod() {
-    //    // Contract:
-    //    assertEquals(oracle, value);
-    //}
+
+    /*
+     * Helper methods
+     */
+
+    /**
+     * Simulates a GET-request to the server
+     * @return the response from the server
+     */
+    static String LOCALHOST_GET_REQUEST(int port, String target) throws Exception {
+
+        // setup local server and send the GET request to it
+        Server server = (ContinuousIntegrationServer.createServer(port)); // possible flakiness here from startup time?
+        URL localhost = new URL("http://localhost:" + port + "/" + target);
+        URLConnection connection = localhost.openConnection();
+
+        // convert the resulting inputstream to a string
+        InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+        BufferedReader br = new BufferedReader(isr);
+        String response = br.lines().collect(Collectors.joining("\n"));
+
+        // stop the local server and wait until it has finished
+        server.stop();
+        server.join();
+
+        return response;
+
+    }
+
+    /*
+     * Testcases
+     */
+
+    @Test
+    public void testLocalhostGETRequest () {
+        // Contract: the LOCALHOST_GET_REQUEST method to the /status api shall return the expected string
+        try {
+            String response = LOCALHOST_GET_REQUEST(8080, "status");
+            assertEquals("CI server is up & running!", response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception: " + e);
+        }
+    }
 
     @Test
     public void testServerCreation(){
         // Contract: Test that the createServer-method start the server
         try {
-            ContinuousIntegrationServer server = ContinuousIntegrationServer.createServer(8080);
+            Server server = ContinuousIntegrationServer.createServer(8080);
             assertEquals("STARTED", server.getState());
+            server.stop();
+            server.join();
         } catch (Exception e) {
             fail("Exception in server creation: \n" + e);
         }
