@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -96,13 +97,14 @@ public class ContinuousIntegrationServer extends AbstractHandler
         System.out.println("Cloning branch " + branch.toUpperCase() + " from the " + ssh_url.toUpperCase() + " repo");
 
         // create and execute the clone command
-//        String[] clone_command = new String[4];
-//        clone_command[0] = "git";
-//        clone_command[1] = "clone";
-//        clone_command[2] = "--branch=" + branch;
-//        clone_command[3] = ssh_url;
-        String clone_command = "git clone --branch=" + branch + " " + ssh_url;
-        System.out.println("Result from cloning: " + ShellCommand.exec(clone_command));
+        String[] clone_command = new String[4];
+        clone_command[0] = "git";
+        clone_command[1] = "clone";
+        clone_command[2] = ssh_url;
+        clone_command[3] = "temp-git";
+        //String clone_command = "git clone --branch=" + branch + " " + ssh_url;
+        File directory = new File(System.getProperty("user.dir"));
+        System.out.println("Result from cloning: " + ShellCommand.exec(clone_command, directory));
 
 
     }
