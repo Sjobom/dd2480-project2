@@ -5,6 +5,7 @@ import org.springframework.util.FileSystemUtils;
 
 import java.io.*;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class GitTest {
@@ -14,12 +15,13 @@ public class GitTest {
 
         // Create test data
         JSONObject jsonObject = getJsonTestData("git_webhook_baxterthehacker.json");
+        String commit_sha = jsonObject.getString("after");
 
         // Test to clone the repository
         ContinuousIntegrationServer.cloneRepository(jsonObject);
 
         // assert that the README file exists in the directory created
-        File readme = new File(System.getProperty("user.dir") + "//temp-git//0d1a26e67d8f5eaf1f6ba5c57fc3c7d91ac0fd1c//README.md");
+        File readme = new File(System.getProperty("user.dir") + "//temp-git//" + commit_sha + "//README.md");
         assertTrue(readme.exists());
         assertTrue(!readme.isDirectory());
 
@@ -28,6 +30,36 @@ public class GitTest {
         if(!FileSystemUtils.deleteRecursively(dir)) {
             System.out.println("Problem occurred when deleting the directory");
         }
+    }
+
+    @Test
+    public void testGitDelete() {
+        // Contract: Test if a cloned git repository can be removed correctly
+
+        // create test data
+        JSONObject jsonObject = getJsonTestData("git_webhook_baxterthehacker.json");
+        String commit_sha = jsonObject.getString("after");
+
+        // clone a repository
+        ContinuousIntegrationServer.cloneRepository(jsonObject);
+
+        // assert that the README file exists in the directory created
+        File readme = new File(System.getProperty("user.dir") + "//temp-git//" + commit_sha + "//README.md");
+        assertTrue(readme.exists());
+        assertTrue(!readme.isDirectory());
+
+        // delete the repository
+        ContinuousIntegrationServer.deleteRepository(jsonObject);
+
+        // assert that the README file does not exist anymore
+        assertFalse(readme.exists());
+
+        // cleanup
+        File dir = new File(System.getProperty("user.dir") + "//temp-git//0d1a26e67d8f5eaf1f6ba5c57fc3c7d91ac0fd1c");
+        if(!FileSystemUtils.deleteRecursively(dir)) {
+            System.out.println("Problem occurred when deleting the directory");
+        }
+
     }
 
     /**
