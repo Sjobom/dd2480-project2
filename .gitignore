@@ -13,3 +13,7 @@
 build/*
 gradle/*
 .gradle/*
+
+# build history
+ci-hstory/*
+!ci-hstory/template.html
