@@ -93,6 +93,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // get ssh url
         String ssh_url = jsonObject.getJSONObject("repository").getString("ssh_url");
 
+        // get latest commit sha
+        String latest_commit_sha = jsonObject.getString("after");
+
         // info about action
         System.out.println("Cloning branch " + branch.toUpperCase() + " from the " + ssh_url.toUpperCase() + " repo");
 
@@ -101,11 +104,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
         clone_command[0] = "git";
         clone_command[1] = "clone";
         clone_command[2] = ssh_url;
-        clone_command[3] = "temp-git";
-        //String clone_command = "git clone --branch=" + branch + " " + ssh_url;
-        File directory = new File(System.getProperty("user.dir"));
-        System.out.println("Result from cloning: " + ShellCommand.exec(clone_command, directory));
-
+        clone_command[3] = latest_commit_sha; // the temp folders name
+        File directory = new File(System.getProperty("user.dir") + "//temp-git");
+        directory.mkdir(); // if directory is not present
+        ShellCommand.exec(clone_command, directory);
 
     }
 

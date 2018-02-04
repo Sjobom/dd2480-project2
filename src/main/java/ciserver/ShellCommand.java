@@ -52,9 +52,7 @@ public class ShellCommand {
             String line = "";
             while((line = r.readLine()) != null) {
                 response.append(line + "\n");
-                System.out.println("line read");
             }
-            System.out.println("lines finished reading");
         } catch(Exception e) {
             e.printStackTrace();
         }
