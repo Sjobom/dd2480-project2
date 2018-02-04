@@ -1,6 +1,7 @@
 import ciserver.ContinuousIntegrationServer;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.springframework.util.FileSystemUtils;
 
 import java.io.*;
 
@@ -40,7 +41,9 @@ public class GitTest {
 
         // cleanup
         File dir = new File(System.getProperty("user.dir") + "//temp-git//0d1a26e67d8f5eaf1f6ba5c57fc3c7d91ac0fd1c");
-        dir.delete();
+        if(!FileSystemUtils.deleteRecursively(dir)) {
+            System.out.println("Problem occurred when deleting the directory");
+        }
     }
 
 }

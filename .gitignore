@@ -13,3 +13,6 @@
 build/*
 gradle/*
 .gradle/*
+
+# temp git files
+temp-git/*
