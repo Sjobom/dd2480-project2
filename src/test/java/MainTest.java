@@ -64,7 +64,6 @@ public class MainTest {
         // Contract: Test that the createServer-method start the server
         try {
             Server server = ContinuousIntegrationServer.createServer(8080);
-            ContinuousIntegrationServer.cloneRepository();
             assertEquals("STARTED", server.getState());
             server.stop();
             server.join();

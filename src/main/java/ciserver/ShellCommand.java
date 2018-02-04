@@ -1,6 +1,7 @@
 package ciserver;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 /*
     Executes given command from current runtime environment
@@ -21,6 +22,28 @@ public class ShellCommand {
         Process p;
         try{
             p = Runtime.getRuntime().exec(command);
+            //wait for process to exec
+            p.waitFor();
+
+            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+            while((line = r.readLine()) != null) {
+                response.append(line + "\n");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return response.toString();
+    }
+
+    public static String exec(String[] command, File directory) {
+        StringBuffer response = new StringBuffer();
+
+        Process p;
+        try{
+            p = Runtime.getRuntime().exec(command, null, directory);
             //wait for process to exec
             p.waitFor();
 

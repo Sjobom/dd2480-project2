@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -37,7 +39,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // choose action with regard to target route
         switch(route) {
             case "/webhook":
-                this.tryIntegration();
+                this.tryIntegration(baseRequest);
                 this.setResponse200(response, "webhook");
                 break;
             case "/build":
@@ -61,19 +63,50 @@ public class ContinuousIntegrationServer extends AbstractHandler
     /**
      * Perform all the continuous integration tasks
      */
-    void tryIntegration() {
-        // 1st clone the repository
-        cloneRepository();
-        // 2nd compile the code
-        compileCode();
-        // 3rd build the code
-        runTests();
+    void tryIntegration(Request baseRequest) {
+        /* get payload from HTTP request and create JSON object */
+        String payload = baseRequest.getParameter("payload");
+        if (payload == null){
+            System.err.println("Error: there was no payload present in the HTTP Request!");
+            return;
+        }
+        JSONObject jsonObject = new JSONObject(payload);
+            // 1st clone the repository
+            cloneRepository(jsonObject);
+            // 2nd compile the code
+            compileCode();
+            // 3rd build the code
+            runTests();
+
     }
 
     /**
      * Clone the repository into temporary storage
      */
-    public static void cloneRepository() {
+    public static void cloneRepository(JSONObject jsonObject) throws JSONException{
+        // get branch name
+        String ref = jsonObject.getString("ref");
+        String[] ref_parts = ref.split("/");
+        String branch = ref_parts[ref_parts.length - 1];
+
+        // get ssh url
+        String ssh_url = jsonObject.getJSONObject("repository").getString("ssh_url");
+
+        // get latest commit sha
+        String latest_commit_sha = jsonObject.getString("after");
+
+        // info about action
+        System.out.println("Cloning branch " + branch.toUpperCase() + " from the " + ssh_url.toUpperCase() + " repo");
+
+        // create and execute the clone command
+        String[] clone_command = new String[4];
+        clone_command[0] = "git";
+        clone_command[1] = "clone";
+        clone_command[2] = ssh_url;
+        clone_command[3] = latest_commit_sha; // the temp folders name
+        File directory = new File(System.getProperty("user.dir") + "//temp-git");
+        directory.mkdir(); // if directory is not present
+        ShellCommand.exec(clone_command, directory);
 
     }
 
