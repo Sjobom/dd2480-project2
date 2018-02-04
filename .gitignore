@@ -16,3 +16,8 @@ gradle/*
 
 # temp git files
 temp-git/*
+
+# build history
+ci-history/*
+!ci-history/template.html
+
