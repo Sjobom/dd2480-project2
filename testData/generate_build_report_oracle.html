@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CI Build</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style media="screen">
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin-left: 25px;
+    }
+    th, td {
+        text-align: left;
+    }
+    th {
+        padding-right: 5vw;
+    }
+    /* source: https://www.w3schools.com/howto/howto_js_collapsible.asp */
+    /* Style the button that is used to open and close the collapsible content */
+    #collapsible {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    /* source: https://www.w3schools.com/howto/howto_js_collapsible.asp */
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .active, .collapsible:hover {
+        background-color: #ccc;
+    }
+
+    /* source: https://www.w3schools.com/howto/howto_js_collapsible.asp */
+    /* Style the collapsible content. Note: hidden by default */
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+    </style>
+    <script type="text/javascript">
+    window.onload = function () {
+        /* source: https://www.w3schools.com/howto/howto_js_collapsible.asp */
+        var coll = document.getElementById('collapsible');
+        coll.addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        })
+        // change color of success/failure
+        var status = document.getElementById('status');
+        if (status.innerHTML.trim() === "Success") {
+            status.style.color = "green";
+        } else if (status.innerHTML.trim() === "Failure") {
+            status.style.color = "red";
+        } else {
+            status.style.color = "#DCDCDC";
+        }
+    }
+</script>
+</head>
+<body>
+<h1>Build history</h1>
+<table>
+    <!-- build status -->
+    <tr>
+        <th>Status</th>
+        <td id="status" style="font-weight: bold;">
+            Failure
+        </td>
+    </tr>
+    <!-- blank row -->
+    <tr>
+        <td>
+            <br/>
+        </td>
+        <td>
+            <br/>
+        </td>
+    </tr>
+    <!-- Additional details -->
+    <tr>
+        <th>Commit</th>
+        <td>
+            <a href="https://github.com/Sjobom/dd2480-project2/commit/f099a9ea1cfd49eea5f9b969779317d1f06e3f21">
+                0d1a26e67d8f5eaf1f6ba5c57fc3c7d91ac0fd1c
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <th>Contributor</th>
+        <td>
+            <a href="https://github.com/Sjobom/dd2480-project2/commits?author=Sjobom">
+                baxterthehacker
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <th>Timestamp</th>
+        <td>2015-05-05T23:40:12Z</td>
+    </tr>
+</table>
+<!-- bulk output -->
+<!-- <h2 >Output</h2> -->
+<button id="collapsible" style="margin-top: 5vh;">Show output</button>
+<div class="content">
+    <p>
+        TODO
+    </p>
+</div>
+
+</body>
+</html>
