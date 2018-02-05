@@ -322,7 +322,7 @@ public class BuildHistoryTest {
             String contents = br.lines().collect(Collectors.joining("\n"));
 
             //test getting the build history by get request
-            String reguestedBuildHTML = MainTest.LOCALHOST_GET_REQUEST(8080, "build/f099a9ea1cfd49eea5f9b969779317d1f06e3f21");
+            String reguestedBuildHTML = MainTest.LOCALHOST_GET_REQUEST(8080, "build/" + commitID);
 
             //ignore spaces and tabs and new lines
             oracle = oracle.replaceAll("\\s", "");
