@@ -1,4 +1,4 @@
-import ciserver.ContinuousIntegrationServer;
+import ciserver.RepoHandler;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.springframework.util.FileSystemUtils;
@@ -18,7 +18,7 @@ public class GitTest {
         String commit_sha = jsonObject.getString("after");
 
         // Test to clone the repository
-        ContinuousIntegrationServer.cloneRepository(jsonObject);
+        RepoHandler.cloneRepository(jsonObject);
 
         // assert that the README file exists in the directory created
         File readme = new File(System.getProperty("user.dir") + "//temp-git//" + commit_sha + "//README.md");
@@ -41,7 +41,7 @@ public class GitTest {
         String commit_sha = jsonObject.getString("after");
 
         // clone a repository
-        ContinuousIntegrationServer.cloneRepository(jsonObject);
+        RepoHandler.cloneRepository(jsonObject);
 
         // assert that the README file exists in the directory created
         File readme = new File(System.getProperty("user.dir") + "//temp-git//" + commit_sha + "//README.md");
@@ -49,7 +49,7 @@ public class GitTest {
         assertTrue(!readme.isDirectory());
 
         // delete the repository
-        ContinuousIntegrationServer.deleteRepository(jsonObject);
+        RepoHandler.deleteRepository(jsonObject);
 
         // assert that the README file does not exist anymore
         assertFalse(readme.exists());
