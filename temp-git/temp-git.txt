@@ -1,0 +1,1 @@
+This files only purpose is to make sure the temp-git folder is present!

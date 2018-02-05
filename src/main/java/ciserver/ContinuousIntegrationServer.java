@@ -107,7 +107,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         clone_command[4] = ssh_url;
         clone_command[5] = latest_commit_sha; // the temp folders name
         File directory = new File(System.getProperty("user.dir") + "//temp-git");
-        directory.mkdir(); // if directory is not present
         ShellCommand.exec(clone_command, directory);
 
     }
