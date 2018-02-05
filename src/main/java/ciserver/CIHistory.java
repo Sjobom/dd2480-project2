@@ -41,7 +41,7 @@ public class CIHistory {
      * @param output any other information to be recorded
      * @throws IOException if the template is missing or file cannot be saved
      */
-    public void storeBuild(boolean status, String buildID, String contributor, String timestamp, String output) throws IOException {
+    public static void storeBuild(boolean status, String buildID, String contributor, String timestamp, String output) throws IOException {
 
         // read the template file
         String templatePath = "ci-history/template.html";
