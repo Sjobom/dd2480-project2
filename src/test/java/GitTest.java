@@ -40,7 +40,7 @@ public class GitTest {
 			assertEquals(string_oracle, string_report);
 
 			// remove the file when testing is complete
-			// report.delete();
+			report.delete();
 		} catch (IOException e) {                                                                                                                                                                                                           
 			fail(e.toString());
 		}
