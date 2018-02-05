@@ -76,9 +76,10 @@ public class RepoHandler {
 		}
 		String contributors = sb.toString();
 		
-		// use current date as a timestamp
-		String timestamp = new Date().toString();
+		String timestamp = jsonObject.getJSONObject("repository").getString("updated_at");
+
 		try {
+			// @TODO: Pass test output instead of todo
 			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, "TODO");
 		} catch (IOException e) { e.printStackTrace(); }
 	}
