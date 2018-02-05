@@ -15,6 +15,7 @@ public class RepoTest {
     public void testRunCheck() {
         //Contract: Test that runCheck runs and returns a respsonse string
         File project = new File(System.getProperty("user.dir")+"//temp-git//dummy_project");
+
         String gradleResponse = RepoHandler.runCheck(project);
         // assert that the response string contains something
         assertFalse(gradleResponse.isEmpty());
