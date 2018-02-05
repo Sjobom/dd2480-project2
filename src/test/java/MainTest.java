@@ -5,12 +5,14 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MainTest {
 
@@ -71,6 +73,22 @@ public class MainTest {
             fail("Exception in server creation: \n" + e);
         }
     }
+
+	@Test
+	public void testBuildList() {
+		// Contract: Test that the server lists build urls properly
+		try {
+			File f = new File(System.getProperty("user.dir") + "//ci-history//test_build.html");
+			f.createNewFile();
+			String listing = LOCALHOST_GET_REQUEST(8080, "build");
+			assertTrue(listing.contains(
+				"<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/test_build\">test_build</a></td></tr>"
+			));
+			f.delete();
+		} catch (Exception e) {
+			fail(e.toString());
+		}
+	}
     
     @Test
     public void test1() {
