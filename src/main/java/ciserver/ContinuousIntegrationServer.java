@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -17,6 +16,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.util.FileSystemUtils;
 
 
 /**
@@ -77,6 +77,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
             compileCode();
             // 3rd build the code
             runTests();
+            // 4th delete repository
+            deleteRepository(jsonObject);
 
     }
 
@@ -122,6 +124,17 @@ public class ContinuousIntegrationServer extends AbstractHandler
      */
     public static void runTests() {
 
+    }
+
+    /**
+     * Delete the temporarily cloned repository (cleanup)
+     */
+    public static void deleteRepository(JSONObject jsonObject) {
+        String latest_commit_sha = jsonObject.getString("after");
+        File dir = new File(System.getProperty("user.dir") + "//temp-git//" + latest_commit_sha);
+        if(!FileSystemUtils.deleteRecursively(dir)) {
+            System.out.println("Problem occurred when deleting the temporarily cloned git repo's directory");
+        }
     }
 
     /**
