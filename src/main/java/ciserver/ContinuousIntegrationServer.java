@@ -74,7 +74,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             // 1st clone the repository
             cloneRepository(jsonObject);
             // 2nd compile the code
-            compileCode();
+            compileCode(jsonObject);
             // 3rd build the code
             runTests();
             // 4th delete repository
@@ -115,7 +115,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     /**
      * Run the compile-procedure for the repository
      */
-    public static void compileCode() {
+    public static void compileCode(JSONObject jsonObject) {
 
     }
 
@@ -130,11 +130,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
      * Delete the temporarily cloned repository (cleanup)
      */
     public static void deleteRepository(JSONObject jsonObject) {
-        String latest_commit_sha = jsonObject.getString("after");
-        File dir = new File(System.getProperty("user.dir") + "//temp-git//" + latest_commit_sha);
+        File dir = getRepoFilePath(jsonObject);
         if(!FileSystemUtils.deleteRecursively(dir)) {
             System.out.println("Problem occurred when deleting the temporarily cloned git repo's directory");
         }
+    }
+
+    public static File getRepoFilePath(JSONObject jsonObject) {
+        String latest_commit_sha = jsonObject.getString("after");
+        return new File(System.getProperty("user.dir") + "//temp-git//" + latest_commit_sha);
     }
 
     /**
