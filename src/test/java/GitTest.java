@@ -22,7 +22,7 @@ public class GitTest {
 		JSONObject jsonObject = getJsonTestData("full_webhook_baxterthehacker.json");
 		String buildID = jsonObject.getString("after");
 
-		RepoHandler.generateBuildReport(jsonObject, false);
+		RepoHandler.generateBuildReport(jsonObject, false, "TODO");
 
         File report = new File(System.getProperty("user.dir") + "//ci-history//" + buildID + ".html");
         File oracle = new File(System.getProperty("user.dir") + "//testData//generate_build_report_oracle.html");
