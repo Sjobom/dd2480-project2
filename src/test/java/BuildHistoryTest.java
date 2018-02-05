@@ -1,4 +1,4 @@
-import ciserver.ContinuousIntegrationServer;
+import ciserver.CIHistory;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -25,7 +25,7 @@ public class BuildHistoryTest {
             final String output =       "BUILD FAILED in 12s";
 
             // run the method
-            ContinuousIntegrationServer.storeBuild(
+            CIHistory.storeBuild(
                     status,
                     commitID,
                     contributor,
