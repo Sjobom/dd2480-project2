@@ -5,6 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+/**
+ * CIHistory deals with problems related to cataloging and fetching
+ * build information.
+ */
 public class CIHistory {
 
     /**
