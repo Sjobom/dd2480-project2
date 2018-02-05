@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -38,13 +39,17 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 this.setResponse200(response, "webhook");
                 break;
             case "/build":
-                String buildHistory = CIHistory.fetchBuild(m.group(2));//.fetchBuild(m.group(2));
-                // if the requested build is not found, return 404 Not Found
-                if (buildHistory != null) {
-                    this.setResponse200(response, buildHistory);
-                } else {
-                    this.setResponse404(response);
-                }
+				if (m.group(2) != null) {
+					// List specific build
+					String buildHistory = CIHistory.fetchBuild(m.group(2));
+					if (buildHistory != null)
+						this.setResponse200(response, buildHistory);
+					else
+						this.setResponse404(response);
+				} else {
+					// List all previous builds
+					this.setResponse200(response, CIHistory.createBuildListing());
+				}
                 break;
             case "/status":
                 this.setResponse200(response, "CI server is up & running!");
