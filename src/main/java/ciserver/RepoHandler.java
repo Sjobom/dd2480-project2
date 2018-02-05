@@ -39,20 +39,18 @@ public class RepoHandler {
 
     }
 
-    /**
-     * Run the compile-procedure for the repository
+    /*
+        Run gradle check on given path project folder
+        @Return returns Gradle response msg from gradle check command
      */
-    public static void compileCode(JSONObject jsonObject) {
+    public static String runCheck(File path){
+        //Create command
+        String[] check_command = new String[2];
+        check_command[0] = "gradle";
+        check_command[1] = "check";
 
+        return ShellCommand.exec(check_command, path);
     }
-
-    /**
-     * Run the test-suite for the repository
-     */
-    public static void runTests() {
-
-    }
-
 
     /**
      * Delete the temporarily cloned repository (cleanup)

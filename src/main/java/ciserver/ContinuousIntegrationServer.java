@@ -68,11 +68,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         JSONObject jsonObject = new JSONObject(payload);
             // 1st clone the repository
             RepoHandler.cloneRepository(jsonObject);
-            // 2nd compile the code
-            RepoHandler.compileCode(jsonObject);
-            // 3rd build the code
-            RepoHandler.runTests();
-            // 4th delete repository
+            //2nd compile and run tests
+            String checkResponse = RepoHandler.runCheck(RepoHandler.getRepoFilePath(jsonObject));
+            // 3rd delete repository
             RepoHandler.deleteRepository(jsonObject);
 
     }

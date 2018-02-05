@@ -1,0 +1,42 @@
+group 'com.idaf.fad'
+
+apply plugin: "java"
+
+sourceSets {
+	main {
+		java {
+			srcDir "core/src"
+		}
+	}
+	test {
+		java {
+			srcDir "core/test"
+		}
+	}
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+ext {
+	mainClass = "com.decide.app.Main"
+}
+
+def genericTask = {
+	classpath		= sourceSets.main.runtimeClasspath
+	standardInput 	= System.in
+
+}
+
+task run(type: JavaExec) {
+	configure genericTask
+	main = mainClass
+}
