@@ -101,11 +101,13 @@ public class ContinuousIntegrationServer extends AbstractHandler
         System.out.println("Cloning branch " + branch.toUpperCase() + " from the " + ssh_url.toUpperCase() + " repo");
 
         // create and execute the clone command
-        String[] clone_command = new String[4];
+        String[] clone_command = new String[6];
         clone_command[0] = "git";
         clone_command[1] = "clone";
-        clone_command[2] = ssh_url;
-        clone_command[3] = latest_commit_sha; // the temp folders name
+        clone_command[2] = "--branch";
+        clone_command[3] = branch;
+        clone_command[4] = ssh_url;
+        clone_command[5] = latest_commit_sha; // the temp folders name
         File directory = new File(System.getProperty("user.dir") + "//temp-git");
         directory.mkdir(); // if directory is not present
         ShellCommand.exec(clone_command, directory);
