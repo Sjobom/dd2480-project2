@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.StringBuilder;
 import java.util.Date;
 
@@ -71,14 +72,15 @@ public class RepoHandler {
 			sb.append(commits.getJSONObject(i)
 						.getJSONObject("author")
 						.getString("name"));
-			if (i < commits.length()-1) sb.append(", ")
+			if (i < commits.length()-1) sb.append(", ");
 		}
 		String contributors = sb.toString();
 		
 		// use current date as a timestamp
 		String timestamp = new Date().toString();
-		
-		CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, "TODO");
+		try {
+			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, "TODO");
+		} catch (IOException e) { e.printStackTrace(); }
 	}
 
 
