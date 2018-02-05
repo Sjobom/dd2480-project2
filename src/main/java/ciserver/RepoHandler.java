@@ -61,7 +61,7 @@ public class RepoHandler {
 	 * Generates a html build-report file and places it
 	 * in the ci-history directory
 	 */
-	public static void generateBuildReport(JSONObject jsonObject, boolean buildStatus) {
+	public static void generateBuildReport(JSONObject jsonObject, boolean buildStatus, String output) {
 		// fetch build id (sha hash of head)
 		String buildID = jsonObject.getString("after");
 
@@ -79,8 +79,7 @@ public class RepoHandler {
 		String timestamp = jsonObject.getJSONObject("repository").getString("updated_at");
 
 		try {
-			// @TODO: Pass test output instead of todo
-			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, "TODO");
+			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, output);
 		} catch (IOException e) { e.printStackTrace(); }
 	}
 

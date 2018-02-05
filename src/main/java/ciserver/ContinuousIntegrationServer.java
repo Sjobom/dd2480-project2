@@ -73,8 +73,8 @@ public class ContinuousIntegrationServer extends AbstractHandler
             // 3rd build the code
             RepoHandler.runTests();
 			// 4th generate build report
-			// @TODO: pass build status instead of always true
-			RepoHandler.generateBuildReport(jsonObject, true);
+			// @TODO: pass build status and message instead of dummy values
+			RepoHandler.generateBuildReport(jsonObject, true, "TODO");
             // 5th delete repository
             RepoHandler.deleteRepository(jsonObject);
 
