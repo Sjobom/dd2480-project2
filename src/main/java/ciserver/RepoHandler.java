@@ -2,9 +2,12 @@ package ciserver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
+import java.lang.StringBuilder;
+import java.util.Date;
 
 public class RepoHandler {
     /**
@@ -50,8 +53,33 @@ public class RepoHandler {
      * Run the test-suite for the repository
      */
     public static void runTests() {
-
+		
     }
+
+	/**
+	 * Generates a html build-report file and places it
+	 * in the ci-history directory
+	 */
+	public static void generateBuildReport(JSONObject jsonObject, boolean buildStatus) {
+		// fetch build id (sha hash of head)
+		String buildID = jsonObject.getString("after");
+
+		// fetch contributors by iterating over commits
+		JSONArray commits = jsonObject.getJSONArray("commits");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < commits.length(); i++) {
+			sb.append(commits.getJSONObject(i)
+						.getJSONObject("author")
+						.getString("name"));
+			if (i < commits.length()-1) sb.append(", ")
+		}
+		String contributors = sb.toString();
+		
+		// use current date as a timestamp
+		String timestamp = new Date().toString();
+		
+		CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, "TODO");
+	}
 
 
     /**
