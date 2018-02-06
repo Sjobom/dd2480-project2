@@ -2,7 +2,10 @@ import org.eclipse.jetty.server.Server;
 import ciserver.*;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.stream.Collectors;
@@ -77,11 +80,9 @@ public class MainTest {
 		try {
 			File f = new File(System.getProperty("user.dir") + "//ci-history//test_build.html");
 			f.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-            writer.write("2018-02-06 16:33:26.259");
 			String listing = LOCALHOST_GET_REQUEST(8080, "build");
 			assertTrue(listing.contains(
-				"<tr><td id=\"build\" style=\"font-weight: bold;\">link</td>"
+				"<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/test_build\">test_build</a></td></tr>"
 			));
 			f.delete();
 		} catch (Exception e) {
