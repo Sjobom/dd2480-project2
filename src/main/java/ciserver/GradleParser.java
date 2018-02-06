@@ -4,15 +4,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * BuildResponseParser parses the build response from gradle
+ * GradleParser parses the build response from gradle
  * to determine whether the build succeeded or failed
  */
-public class BuildResponseParser{
+public class GradleParser {
 
 	/**
 	 * Default constructor
 	 */
-    public BuildResponseParser() {}
+    public GradleParser() {}
 
 	/**
 	 * Parses a gradle build status message and determines whether
