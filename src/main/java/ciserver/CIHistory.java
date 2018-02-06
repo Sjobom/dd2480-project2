@@ -85,25 +85,29 @@ public class CIHistory {
 		if (dirList != null) {
 			for (File build : dirList) {
 				if (!build.getName().equals("template.html") &&
-					!build.getName().equals("listing.html")) {
+					!build.getName().equals("listing.html") && !build.getName().equals("test_build.html")) {
 
 				    try{
 				        //read contents of build file
                         BufferedReader br = new BufferedReader(new FileReader(build));
                         String contents = br.lines().collect(Collectors.joining("\n"));
+                        System.out.println("Checking for timestamp...");
 
                         //regex for timestamps given by new Timestamp(System.currentTimeMillis()).toString();
-                        String timeRegex = "([0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+:[0-9]+.[0-9]+)";
+                        String timeRegex = "[0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+:[0-9]+.[0-9]+";
                         Pattern p = Pattern.compile(timeRegex);
                         Matcher m = p.matcher(contents);
+                        System.out.println(build.toString());
 
                         //Find timestamp in file
-                        String timeStamp = m.group(1);
+                        m.find();
+                        String timeStamp = m.group();
                         String prevBuildName = build.getName().replaceAll(".html","");
-
+                        System.out.println("timestamp: "+timeStamp);
                         //(k = buildName,v = timeStamp)
                         prevBuilds.put(prevBuildName,timeStamp);
-                    }catch (FileNotFoundException e){
+                    }catch (Exception e){
+                        System.out.println("Some error");
                         e.printStackTrace();
                     }
                 }
