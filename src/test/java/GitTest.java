@@ -15,36 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static junit.framework.TestCase.fail;
 
 public class GitTest {
-	@Test
-	public void testGenerateBuildReport() {
-		// Contract: Test that the json data is properly parsed
-		// and generates a valid build report
-		JSONObject jsonObject = getJsonTestData("full_webhook_baxterthehacker.json");
-		String buildID = jsonObject.getString("after");
-
-		RepoHandler.generateBuildReport(jsonObject, false, "TODO");
-
-        File report = new File(System.getProperty("user.dir") + "//ci-history//" + buildID + ".html");
-        File oracle = new File(System.getProperty("user.dir") + "//testData//generate_build_report_oracle.html");
-		assertTrue(report.exists());
-		assertTrue(!report.isDirectory());
-
-		try {
-			// read the generated file
-			BufferedReader br = new BufferedReader(new FileReader(report));
-			String string_report = br.lines().collect(Collectors.joining("\n"));
-			// read the oracle
-			br = new BufferedReader(new FileReader(oracle));
-			String string_oracle = br.lines().collect(Collectors.joining("\n"));
-	
-			assertEquals(string_oracle, string_report);
-
-			// remove the file when testing is complete
-			report.delete();
-		} catch (IOException e) {                                                                                                                                                                                                           
-			fail(e.toString());
-		}
-	}
 
     @Test
     public void testGitClone() {
