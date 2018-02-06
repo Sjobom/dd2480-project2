@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 public class BuildHandler {
 
-    private static final String SERVER_HOSTNAME = "207.154.221.239:8080";
+    private static final String SERVER_HOSTNAME = "http://207.154.221.239:8080";
     private static final String BUILD_API = SERVER_HOSTNAME + "/build";
 
     /**
@@ -39,13 +39,13 @@ public class BuildHandler {
         }
 
         // Clone the repository
-        System.out.println("tryIntegration@" + lastCommit + ": repo cloned");
+        System.out.println("tryIntegration@" + lastCommit + ": cloning repo");
         RepoHandler.cloneRepository(jsonObject);
 
         // Compile and run tests
         System.out.println("tryIntegration@" + lastCommit + ": running gradle");
         String gradleOutput = runCheck(RepoHandler.getRepoFilePath(jsonObject));
-        boolean buildStatus = GradleParser.gradleBuildStatus(gradleOutput);
+        boolean buildStatus = BuildResponseParser.gradleBuildStatus(gradleOutput);
 
         // Prepare build-info parameters
         System.out.println("tryIntegration@" + lastCommit + ": preparing log parameters");
@@ -84,6 +84,10 @@ public class BuildHandler {
         // Delete repository
         System.out.println("tryIntegration@" + lastCommit + ": removing repository");
         RepoHandler.deleteRepository(jsonObject);
+
+        // Print some final messages
+        System.out.println("tryIntegration@" + lastCommit + ": integration complete");
+        System.out.println("tryIntegration@" + lastCommit + " final status: " + buildStatus);
     }
 
     /**
