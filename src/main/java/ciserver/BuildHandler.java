@@ -31,6 +31,7 @@ public class BuildHandler {
         String buildURL = BUILD_API + "/" + lastCommit;
 
         // Set CI status to pending
+        System.out.println("tryIntegration@" + lastCommit + ": setting PENDING status");
         try {
             StatusHandler.sendStatus(StatusHandler.PENDING, buildURL, lastCommit);
         } catch (IOException e) {
@@ -38,13 +39,16 @@ public class BuildHandler {
         }
 
         // Clone the repository
+        System.out.println("tryIntegration@" + lastCommit + ": repo cloned");
         RepoHandler.cloneRepository(jsonObject);
 
         // Compile and run tests
+        System.out.println("tryIntegration@" + lastCommit + ": running gradle");
         String gradleOutput = runCheck(RepoHandler.getRepoFilePath(jsonObject));
         boolean buildStatus = BuildResponseParser.gradleBuildStatus(gradleOutput);
 
         // Prepare build-info parameters
+        System.out.println("tryIntegration@" + lastCommit + ": preparing log parameters");
         String contributor = null;
         String timestamp = new Timestamp(System.currentTimeMillis()).toString();
         JSONArray commits = jsonObject.getJSONArray("commits");
@@ -58,6 +62,7 @@ public class BuildHandler {
         }
 
         // Generate build report
+        System.out.println("tryIntegration@" + lastCommit + ": generating build log");
         try {
             CIHistory.storeBuild(buildStatus, lastCommit, contributor, timestamp, gradleOutput);
         } catch (IOException e) {
@@ -65,6 +70,7 @@ public class BuildHandler {
         }
 
         // Set CI status to either success/failure
+        System.out.println("tryIntegration@" + lastCommit + ": setting final status");
         try {
             if (buildStatus) {
                 StatusHandler.sendStatus(StatusHandler.SUCCESS, buildURL, lastCommit);
@@ -76,6 +82,7 @@ public class BuildHandler {
         }
 
         // Delete repository
+        System.out.println("tryIntegration@" + lastCommit + ": removing repository");
         RepoHandler.deleteRepository(jsonObject);
     }
 
