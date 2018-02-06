@@ -85,7 +85,7 @@ public class CIHistory {
 		if (dirList != null) {
 			for (File build : dirList) {
 				if (!build.getName().equals("template.html") &&
-					!build.getName().equals("listing.html") && !build.getName().equals("test_build.html")) {
+					!build.getName().equals("listing.html")) {
 
 				    try{
 				        //read contents of build file
