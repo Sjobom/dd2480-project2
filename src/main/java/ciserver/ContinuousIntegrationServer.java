@@ -77,9 +77,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
         //2nd compile and run tests
         String checkResponse = RepoHandler.runCheck(RepoHandler.getRepoFilePath(jsonObject));
             
-			  // 3rd generate build report
-			  // @TODO: pass build status and message instead of dummy values
-			  RepoHandler.generateBuildReport(jsonObject, true, "TODO");
+        // 3rd generate build report
+		RepoHandler.generateBuildReport(jsonObject, BuildResponseParser.gradleBuildStatus(checkResponse), checkResponse);
+
         // 4th delete repository
         RepoHandler.deleteRepository(jsonObject);
     }
