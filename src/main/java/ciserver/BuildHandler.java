@@ -42,7 +42,7 @@ public class BuildHandler {
 
         // Compile and run tests
         String gradleOutput = runCheck(RepoHandler.getRepoFilePath(jsonObject));
-        boolean buildStatus = BuildResponseParser.gradleBuildStatus(gradleOutput);
+        boolean buildStatus = GradleParser.gradleBuildStatus(gradleOutput);
 
         // Prepare build-info parameters
         String contributor = null;
