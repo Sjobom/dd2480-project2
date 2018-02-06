@@ -46,7 +46,7 @@ For the detailed API documentation check out the javadoc in the root of the repo
 ## Statement of Contributions
 
 #### Anders
-git cloning programmatically, travis setup, documentation, running shell commands
+git cloning programmatically, travis setup, documentation, running shell commands programmatically, setting up development/production server
 
 #### Marcus
 build report generation, build list, documentation
