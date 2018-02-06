@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 public class BuildHandler {
 
-    private static final String SERVER_HOSTNAME = "http://207.154.221.239:8080";
+    private static final String SERVER_HOSTNAME = "http://207.154.221.239:8081";
     private static final String BUILD_API = SERVER_HOSTNAME + "/build";
 
     /**
