@@ -8,6 +8,7 @@ import org.springframework.util.FileSystemUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.StringBuilder;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -51,6 +52,49 @@ public class RepoHandler {
 
     }
 
+  
+    /*
+         Run gradle check on given path project folder
+         @Return returns Gradle response msg from gradle check command
+      */
+    public static String runCheck(File path){
+        //Create command
+        String[] check_command = new String[2];
+        check_command[0] = "gradle";
+        check_command[1] = "check";
+
+        return ShellCommand.exec(check_command, path);
+    }
+
+	/**
+	 * Generates a html build report file and places it
+	 * in the ci-history directory
+	 * @param jsonObject	Webhook json payload
+	 * @param buildStatus	Build status, true if successful, else false
+	 * @param output		Extra output message
+	 */
+	public static void generateBuildReport(JSONObject jsonObject, boolean buildStatus, String output) {
+		// fetch build id (sha hash of head)
+		String buildID = jsonObject.getString("after");
+
+		// fetch contributors by iterating over commits
+		JSONArray commits = jsonObject.getJSONArray("commits");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < commits.length(); i++) {
+			sb.append(commits.getJSONObject(i)
+						.getJSONObject("author")
+						.getString("name"));
+			if (i < commits.length()-1) sb.append(", ");
+		}
+		String contributors = sb.toString();
+		
+		String timestamp = new Timestamp(System.currentTimeMillis()).toString();
+
+		try {
+			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, output);
+		} catch (IOException e) { e.printStackTrace(); }
+	}
+	
 
     /**
      * Delete the temporarily cloned repository (cleanup)
