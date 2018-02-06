@@ -58,4 +58,4 @@ Integration tests, git cloning programmatically
 commit status updates, web url interface, build report generation 
 
 #### Robert
-running shell commands programmatically, execute gradle check programmatically
+gradle setup, running shell commands programmatically, execute gradle check programmatically, parse gradle response, timestamps in /build (not currently in master))
