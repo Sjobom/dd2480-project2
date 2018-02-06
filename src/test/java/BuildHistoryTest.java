@@ -168,9 +168,8 @@ public class BuildHistoryTest {
                     defaultContributor,
                     defaultTimestamp,
                     defaultOutput);
-            // make the assertion
 
-            System.err.println("++++++++\n" + oracle + " \n\n" + contents);
+            //assertion to oracle
             assertEquals(oracle, contents);
 
             // remove the file when testing is complete
