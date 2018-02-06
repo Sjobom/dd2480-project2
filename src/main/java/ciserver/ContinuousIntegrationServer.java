@@ -71,18 +71,17 @@ public class ContinuousIntegrationServer extends AbstractHandler
             return;
         }
         JSONObject jsonObject = new JSONObject(payload);
-            // 1st clone the repository
-            RepoHandler.cloneRepository(jsonObject);
-            // 2nd compile the code
-            RepoHandler.compileCode(jsonObject);
-            // 3rd build the code
-            RepoHandler.runTests();
-			// 4th generate build report
-			// @TODO: pass build status and message instead of dummy values
-			RepoHandler.generateBuildReport(jsonObject, true, "TODO");
-            // 5th delete repository
-            RepoHandler.deleteRepository(jsonObject);
+        // 1st clone the repository
+        RepoHandler.cloneRepository(jsonObject);
 
+        //2nd compile and run tests
+        String checkResponse = RepoHandler.runCheck(RepoHandler.getRepoFilePath(jsonObject));
+            
+			  // 3rd generate build report
+			  // @TODO: pass build status and message instead of dummy values
+			  RepoHandler.generateBuildReport(jsonObject, true, "TODO");
+        // 4th delete repository
+        RepoHandler.deleteRepository(jsonObject);
     }
 
     /**
