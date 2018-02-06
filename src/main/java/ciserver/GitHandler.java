@@ -12,11 +12,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * RepoHandler handles functionality related to
+ * GitHandler handles functionality related to
  * Git, such as cloning repositories and compiling
  * code.
  */
-public class RepoHandler {
+public class GitHandler {
 
     /**
      * Clone the repository into temporary storage
