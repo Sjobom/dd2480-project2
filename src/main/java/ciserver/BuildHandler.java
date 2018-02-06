@@ -1,9 +1,11 @@
 package ciserver;
 
 import org.eclipse.jetty.server.Request;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 
 public class BuildHandler {
     /**
@@ -25,7 +27,7 @@ public class BuildHandler {
         String checkResponse = runCheck(RepoHandler.getRepoFilePath(jsonObject));
 
         // 3rd generate build report
-		RepoHandler.generateBuildReport(jsonObject, BuildResponseParser.gradleBuildStatus(checkResponse), checkResponse);
+		generateBuildReport(jsonObject, BuildResponseParser.gradleBuildStatus(checkResponse), checkResponse);
 
         // 4th delete repository
         RepoHandler.deleteRepository(jsonObject);
@@ -44,4 +46,33 @@ public class BuildHandler {
 
         return ShellCommand.exec(check_command, path);
     }
+
+    /**
+	 * Generates a html build report file and places it
+	 * in the ci-history directory
+	 * @param jsonObject	Webhook json payload
+	 * @param buildStatus	Build status, true if successful, else false
+	 * @param output		Extra output message
+	 */
+	public static void generateBuildReport(JSONObject jsonObject, boolean buildStatus, String output) {
+		// fetch build id (sha hash of head)
+		String buildID = jsonObject.getString("after");
+
+		// fetch contributors by iterating over commits
+		JSONArray commits = jsonObject.getJSONArray("commits");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < commits.length(); i++) {
+			sb.append(commits.getJSONObject(i)
+						.getJSONObject("author")
+						.getString("name"));
+			if (i < commits.length()-1) sb.append(", ");
+		}
+		String contributors = sb.toString();
+
+		String timestamp = jsonObject.getJSONObject("repository").getString("updated_at");
+
+		try {
+			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, output);
+		} catch (IOException e) { e.printStackTrace(); }
+	}
 }
