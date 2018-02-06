@@ -91,13 +91,11 @@ public class CIHistory {
 				        //read contents of build file
                         BufferedReader br = new BufferedReader(new FileReader(build));
                         String contents = br.lines().collect(Collectors.joining("\n"));
-                        System.out.println("Checking for timestamp...");
 
                         //regex for timestamps given by new Timestamp(System.currentTimeMillis()).toString();
                         String timeRegex = "[0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+:[0-9]+.[0-9]+";
                         Pattern p = Pattern.compile(timeRegex);
                         Matcher m = p.matcher(contents);
-                        System.out.println(build.toString());
 
                         //Find timestamp in file
                         m.find();
@@ -107,7 +105,6 @@ public class CIHistory {
                         //(k = buildName,v = timeStamp)
                         prevBuilds.put(prevBuildName,timeStamp);
                     }catch (Exception e){
-                        System.out.println("Some error");
                         e.printStackTrace();
                     }
                 }
