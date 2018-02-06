@@ -1,15 +1,14 @@
 import org.eclipse.jetty.server.Server;
 import ciserver.*;
+import org.json.JSONObject;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.stream.Collectors;
 
+import static ciserver.BuildHandler.getContributor;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,6 +42,23 @@ public class MainTest {
 
         return response;
 
+    }
+
+    /**
+     * Reads a JSON file and returns a JSON object from it
+     * @param filename name of the file
+     * @return a JSONObject made from the JSON-object in the file
+     * @throws IOException
+     */
+    static JSONObject readJSON(String filename) throws IOException {
+        // read the generated file
+        File file = new File("testData/" + filename);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String contents = br.lines().collect(Collectors.joining("\n"));
+        br.close();
+
+        // convert string to jsonObject
+        return new JSONObject(contents);
     }
 
     /*
@@ -96,5 +112,18 @@ public class MainTest {
         //a given command
         String r = ShellCommand.exec("echo test");
         assertEquals("test\n", r);
+    }
+
+    @Test
+    public void testGetContributor() {
+        // Contract: the getContributor method should return the username and not actual name
+        try {
+            JSONObject obj = readJSON("get_contributor_oracle.json");
+            String oracle = "remnestal";
+            String actual = getContributor(obj);
+            assertEquals(oracle, actual);
+        } catch (IOException e) {
+            fail("Exception occurred: " + e);
+        }
     }
 }
