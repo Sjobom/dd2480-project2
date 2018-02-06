@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import static ciserver.BuildHandler.getContributor;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MainTest {
@@ -87,6 +88,23 @@ public class MainTest {
             server.join();
         } catch (Exception e) {
             fail("Exception in server creation: \n" + e);
+        }
+    }
+
+    @Test
+    public void testIsPullRequest(){
+        //Contract: Test that isPullRequest-method returns true for valid pull request json and false for not pull request json
+        try{
+            JSONObject json_pr = readJSON("pr.json");
+            JSONObject json_notPr = readJSON("not_pr.json");
+            ;
+            boolean pr_res = BuildHandler.isPullRequest(json_pr);
+            boolean notPr_res = BuildHandler.isPullRequest(json_notPr);
+
+            assertTrue(pr_res);
+            assertFalse(notPr_res);
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 

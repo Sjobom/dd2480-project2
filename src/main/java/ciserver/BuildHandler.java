@@ -24,9 +24,16 @@ public class BuildHandler {
             System.err.println("Error: there was no payload present in the HTTP Request!");
             return;
         }
-        
-        // Break up the payload into JSON components
+
+        // duplicate events from pull requests are dropped
         JSONObject jsonObject = new JSONObject(payload);
+
+        if (isPullRequest(jsonObject)) {
+            System.out.println("Pull request dropped.");
+            return;
+        }
+
+        // Break up the payload into JSON components
         String lastCommit = jsonObject.getString("after");
         String buildURL = BUILD_API + "/" + lastCommit;
 
@@ -104,4 +111,15 @@ public class BuildHandler {
         return ShellCommand.exec(check_command, path);
     }
 
+    /**
+     * Check if given JSONObject is of type pull request
+     * @param jsonobject a json containing webhook information
+     * @return true if it is a pull request, false if not
+     */
+    public static boolean isPullRequest(JSONObject json){
+        if (json.isNull("head_commit")) {
+            return true;
+        }
+        return false;
+    }
 }
