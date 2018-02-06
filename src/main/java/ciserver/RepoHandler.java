@@ -51,19 +51,18 @@ public class RepoHandler {
 
     }
 
-    /**
-     * Run the compile-procedure for the repository
-	 * @param jsonObject	Webhook json payload
-     */
-    public static void compileCode(JSONObject jsonObject) {
+  
+    /*
+         Run gradle check on given path project folder
+         @Return returns Gradle response msg from gradle check command
+      */
+    public static String runCheck(File path){
+        //Create command
+        String[] check_command = new String[2];
+        check_command[0] = "gradle";
+        check_command[1] = "check";
 
-    }
-
-    /**
-     * Run the test-suite for the repository
-     */
-    public static void runTests() {
-		
+        return ShellCommand.exec(check_command, path);
     }
 
 	/**

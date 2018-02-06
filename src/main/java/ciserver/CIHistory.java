@@ -4,6 +4,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
+import java.lang.StringBuilder;
+import java.util.ArrayList;
 
 /**
  * CIHistory deals with problems related to cataloging and fetching
@@ -66,4 +68,44 @@ public class CIHistory {
         fw.close();
 
     }
+
+	/**
+	 * Generates a list of all previous builds
+	 * @return ArrayList with all previous build-ids
+	 */
+	public static ArrayList<String> getBuildList() {
+		File dir = new File(System.getProperty("user.dir")+"//ci-history//.");
+		File[] dirList = dir.listFiles();
+		ArrayList<String> prevBuilds = new ArrayList<String>();
+		if (dirList != null) {
+			for (File build : dirList) {
+				if (!build.getName().equals("template.html") &&
+					!build.getName().equals("listing.html"))
+					prevBuilds.add(build.getName().replaceAll(".html",""));
+			}
+		}
+		return prevBuilds;
+	}
+
+	/**
+	 * Generates the HTML listing of all previous
+	 * builds
+	 * @return HTML-formatted list of builds
+	 */
+	public static String createBuildListing() throws IOException {
+        // read the template file
+        String templatePath = "ci-history/listing.html";
+        BufferedReader br = new BufferedReader(new FileReader(templatePath));
+        String template = br.lines().collect(Collectors.joining("\n"));
+
+		String format = "<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/%1$s\">%1$s</a></td></tr>\r\n";
+		ArrayList<String> prevBuilds = getBuildList();	
+		StringBuilder table = new StringBuilder();
+		
+		for (String build : prevBuilds) {
+			table.append(String.format(format, build));
+		}
+
+		return template.replaceAll("\\{\\{\\s*listing\\s*\\}\\}", table.toString());
+	}
 }
