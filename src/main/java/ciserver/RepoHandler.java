@@ -8,6 +8,7 @@ import org.springframework.util.FileSystemUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.StringBuilder;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -87,7 +88,7 @@ public class RepoHandler {
 		}
 		String contributors = sb.toString();
 		
-		String timestamp = jsonObject.getJSONObject("repository").getString("updated_at");
+		String timestamp = new Timestamp(System.currentTimeMillis()).toString();
 
 		try {
 			CIHistory.storeBuild(buildStatus, buildID, contributors, timestamp, output);
