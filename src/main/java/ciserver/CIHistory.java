@@ -103,7 +103,7 @@ public class CIHistory {
                         m.find();
                         String timeStamp = m.group();
                         String prevBuildName = build.getName().replaceAll(".html","");
-                        System.out.println("timestamp: "+timeStamp);
+
                         //(k = buildName,v = timeStamp)
                         prevBuilds.put(prevBuildName,timeStamp);
                     }catch (Exception e){
