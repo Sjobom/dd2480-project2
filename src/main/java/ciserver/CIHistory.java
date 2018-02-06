@@ -3,6 +3,10 @@ package ciserver;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
@@ -73,15 +77,37 @@ public class CIHistory {
 	 * Generates a list of all previous builds
 	 * @return ArrayList with all previous build-ids
 	 */
-	public static ArrayList<String> getBuildList() {
+	public static Map<String, String> getBuildList() {
 		File dir = new File(System.getProperty("user.dir")+"//ci-history//.");
 		File[] dirList = dir.listFiles();
-		ArrayList<String> prevBuilds = new ArrayList<String>();
+        Map<String, String> prevBuilds = new TreeMap<String, String>();
+
 		if (dirList != null) {
 			for (File build : dirList) {
 				if (!build.getName().equals("template.html") &&
-					!build.getName().equals("listing.html"))
-					prevBuilds.add(build.getName().replaceAll(".html",""));
+					!build.getName().equals("listing.html")) {
+
+				    try{
+				        //read contents of build file
+                        BufferedReader br = new BufferedReader(new FileReader(build));
+                        String contents = br.lines().collect(Collectors.joining("\n"));
+
+                        //regex for timestamps given by new Timestamp(System.currentTimeMillis()).toString();
+                        String timeRegex = "([0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+:[0-9]+.[0-9]+)";
+                        Pattern p = Pattern.compile(timeRegex);
+                        Matcher m = p.matcher(contents);
+
+                        //Find timestamp in file
+                        String timeStamp = m.group(1);
+                        String prevBuildName = build.getName().replaceAll(".html","");
+
+                        //(k = buildName,v = timeStamp)
+                        prevBuilds.put(prevBuildName,timeStamp);
+                    }catch (FileNotFoundException e){
+                        e.printStackTrace();
+                    }
+                }
+
 			}
 		}
 		return prevBuilds;
@@ -98,12 +124,13 @@ public class CIHistory {
         BufferedReader br = new BufferedReader(new FileReader(templatePath));
         String template = br.lines().collect(Collectors.joining("\n"));
 
-		String format = "<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/%1$s\">%1$s</a></td></tr>\r\n";
-		ArrayList<String> prevBuilds = getBuildList();	
+		String format = "<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/%1$s\">%1$s</a></td>" +
+                "<td style=\"font-weight: bold;\">%2$</td></tr>\r\n";
+		Map<String, String> prevBuilds = getBuildList();
 		StringBuilder table = new StringBuilder();
 		
-		for (String build : prevBuilds) {
-			table.append(String.format(format, build));
+		for (String build : prevBuilds.values()) {
+			table.append(String.format(format, build, prevBuilds.get(build)));
 		}
 
 		return template.replaceAll("\\{\\{\\s*listing\\s*\\}\\}", table.toString());
