@@ -1,9 +1,11 @@
 package ciserver;
 
 import org.eclipse.jetty.server.Request;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 
 public class BuildHandler {
     /**
@@ -24,9 +26,6 @@ public class BuildHandler {
         //2nd compile and run tests
         String checkResponse = runCheck(RepoHandler.getRepoFilePath(jsonObject));
 
-        // 3rd generate build report
-		RepoHandler.generateBuildReport(jsonObject, BuildResponseParser.gradleBuildStatus(checkResponse), checkResponse);
-
         // 4th delete repository
         RepoHandler.deleteRepository(jsonObject);
     }
@@ -44,4 +43,5 @@ public class BuildHandler {
 
         return ShellCommand.exec(check_command, path);
     }
+
 }
