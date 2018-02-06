@@ -1,5 +1,5 @@
+import ciserver.BuildHandler;
 import ciserver.BuildResponseParser;
-import ciserver.RepoHandler;
 
 import ciserver.ShellCommand;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class RepoTest {
         clone[2] = "https://github.com/gradle/gradle-build-scan-quickstart.git";
         ShellCommand.exec(clone, project);
         project = new File(System.getProperty("user.dir")+"//temp-git//gradle-build-scan-quickstart");
-        String gradleResponse = RepoHandler.runCheck(project);
+        String gradleResponse = BuildHandler.runCheck(project);
 
         Pattern pSuccess = Pattern.compile(BuildResponseParser.gradleSuccessMsg());
         Pattern pFail = Pattern.compile(BuildResponseParser.gradleFailMsg());

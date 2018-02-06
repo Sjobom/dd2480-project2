@@ -7,12 +7,10 @@ import javax.servlet.ServletException;
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ArrayList;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.json.JSONObject;
 
 
 /**
@@ -49,7 +47,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
         // choose action with regard to target route
         switch(route) {
             case "/webhook":
-                this.tryIntegration(baseRequest);
+                BuildHandler.tryIntegration(baseRequest);
                 this.setResponse200(response, "webhook");
                 break;
             case "/build":
@@ -72,31 +70,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 this.setResponse404(response);
         }
         baseRequest.setHandled(true);
-    }
-
-    /**
-     * Perform all the continuous integration tasks
-	 * @param baseRequest	Base request object
-     */
-    void tryIntegration(Request baseRequest) {
-        /* get payload from HTTP request and create JSON object */
-        String payload = baseRequest.getParameter("payload");
-        if (payload == null){
-            System.err.println("Error: there was no payload present in the HTTP Request!");
-            return;
-        }
-        JSONObject jsonObject = new JSONObject(payload);
-        // 1st clone the repository
-        RepoHandler.cloneRepository(jsonObject);
-
-        //2nd compile and run tests
-        String checkResponse = RepoHandler.runCheck(RepoHandler.getRepoFilePath(jsonObject));
-            
-        // 3rd generate build report
-		RepoHandler.generateBuildReport(jsonObject, BuildResponseParser.gradleBuildStatus(checkResponse), checkResponse);
-
-        // 4th delete repository
-        RepoHandler.deleteRepository(jsonObject);
     }
 
     /**
