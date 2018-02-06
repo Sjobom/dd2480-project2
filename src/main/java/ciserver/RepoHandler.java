@@ -10,9 +10,17 @@ import java.io.IOException;
 import java.lang.StringBuilder;
 import java.util.Date;
 
+/**
+ * RepoHandler handles functionality related to
+ * Git, such as cloning repositories and compiling
+ * code.
+ */
 public class RepoHandler {
+
     /**
      * Clone the repository into temporary storage
+	 * @param jsonObject	Webhook json payload
+	 * @throws JSONException
      */
     public static void cloneRepository(JSONObject jsonObject) throws JSONException {
         // get branch name
@@ -43,6 +51,7 @@ public class RepoHandler {
 
     }
 
+  
     /*
          Run gradle check on given path project folder
          @Return returns Gradle response msg from gradle check command
@@ -57,8 +66,11 @@ public class RepoHandler {
     }
 
 	/**
-	 * Generates a html build-report file and places it
+	 * Generates a html build report file and places it
 	 * in the ci-history directory
+	 * @param jsonObject	Webhook json payload
+	 * @param buildStatus	Build status, true if successful, else false
+	 * @param output		Extra output message
 	 */
 	public static void generateBuildReport(JSONObject jsonObject, boolean buildStatus, String output) {
 		// fetch build id (sha hash of head)
@@ -85,6 +97,7 @@ public class RepoHandler {
 
     /**
      * Delete the temporarily cloned repository (cleanup)
+	 * @param jsonObject	Webhook json payload
      */
     public static void deleteRepository(JSONObject jsonObject) {
         File dir = getRepoFilePath(jsonObject);
@@ -93,9 +106,12 @@ public class RepoHandler {
         }
     }
 
+	/**
+	 * Get the filepath to a given repository
+	 * @param jsonObject	Webhook json payload
+	 */
     public static File getRepoFilePath(JSONObject jsonObject) {
         String latest_commit_sha = jsonObject.getString("after");
         return new File(System.getProperty("user.dir") + "//temp-git//" + latest_commit_sha);
     }
-
 }

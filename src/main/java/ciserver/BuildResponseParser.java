@@ -3,21 +3,23 @@ package ciserver;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
-    Class that parses a Build Response String from gradle
-    to determine:
-    Build Success
-    Build Fail
-*/
+/**
+ * BuildResponseParser parses the build response from gradle
+ * to determine whether the build succeeded or failed
+ */
 public class BuildResponseParser{
-    public BuildResponseParser(){
 
-    }
+	/**
+	 * Default constructor
+	 */
+    public BuildResponseParser() {}
 
-    /*
-        returns True if status is successful
-        returns False if status is failed (assumed if not successful)
-     */
+	/**
+	 * Parses a gradle build status message and determines whether
+	 * the build succeeded or failed
+	 * @param buildResponse		A gradle build response
+	 * @return True if the build succeeded, else false
+	 */
     public static boolean gradleBuildStatus(String buildResponse) {
         String success = gradleSuccessMsg();
         Pattern pSuccess = Pattern.compile(success);
@@ -28,11 +30,17 @@ public class BuildResponseParser{
         return false;
     }
 
-    public static String gradleSuccessMsg(){
+	/**
+	 * @return Gradle's build successful message
+	 */
+    public static String gradleSuccessMsg() {
         return "BUILD SUCCESSFUL";
     }
 
-    public static String gradleFailMsg(){
+	/**
+	 * @return Gradle's build failed message
+	 */
+    public static String gradleFailMsg() {
         return "BUILD FAILED";
     }
 }

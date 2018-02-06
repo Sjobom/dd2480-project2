@@ -16,11 +16,25 @@ import org.json.JSONObject;
 
 
 /**
- Skeleton of a ContinuousIntegrationServer which acts as webhook
- See the Jetty documentation for API documentation of those classes.
+ * ContinuousIntegrationServer acts as a webhook and webserver.
+ * It is built on the Jetty webserver.
+ * @see Jetty
  */
 public class ContinuousIntegrationServer extends AbstractHandler
 {
+
+	/**
+	 * The handle method is the primary request handler.
+	 * All incoming requests go through here and are subsequently
+	 * routed to different parts of the application.
+	 *
+	 * @param target		Target URI
+	 * @param baseRequest	Base request object
+	 * @param request		Request object
+	 * @param response		Response object
+	 * @throws IOException,ServletException
+	 * @see	Jetty
+	 */
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -62,6 +76,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     /**
      * Perform all the continuous integration tasks
+	 * @param baseRequest	Base request object
      */
     void tryIntegration(Request baseRequest) {
         /* get payload from HTTP request and create JSON object */
@@ -86,6 +101,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     /**
      * Set the response status to 200 OK and add any additional payload
+	 * @param response	Response object
+	 * @param payload	Response message
+	 * @throws IOException
      */
     void setResponse200(HttpServletResponse response, String payload) throws IOException {
         response.setContentType("text/html;charset=utf-8");
@@ -96,14 +114,20 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
     /**
-     * set the response status to 404 Not Found
+     * Set the response status to 404 Not Found
+	 * @param response	Response object
+	 * @throws IOException
      */
     void setResponse404(HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
-    // start the CI server in command line
+	/**
+	 * Start the CI server from the command line
+	 * @param port	Server port
+	 * @throws Exception
+	 */
     public static Server createServer(int port) throws Exception
     {
         Server server = new Server(port);

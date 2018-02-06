@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
 
+/**
+ * CIHistory deals with problems related to cataloging and fetching
+ * build information.
+ */
 public class CIHistory {
 
     /**

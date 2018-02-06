@@ -3,19 +3,22 @@ package ciserver;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-/*
-    Executes given command from current runtime environment
-    However relatives paths etc need to be taken in consideration in the input commands at the moment,
-    prob add functions here to make that easier.
+
+/**
+ * ShellCommand handles the execution of a given command in
+ * the current runtime environment.
  */
 public class ShellCommand {
-    public ShellCommand(){
+	/**
+	 * Default constructor
+	 */
+    public ShellCommand() {}
 
-    }
-    /*
-    Executes command given as input string
-    Return the String response from executed command
-     */
+	/**
+	 * Executes the given command
+	 * @param command	The command to be executed
+	 * @return Output from the command
+	 */
     public static String exec(String command) {
         StringBuffer response = new StringBuffer();
 
@@ -38,6 +41,13 @@ public class ShellCommand {
         return response.toString();
     }
 
+	/**
+	 * Executes the given command
+	 * @param command	An array of command tokens
+	 * @param directory	The working directory the command
+	 *					will be executed under
+	 * @return Output from the command
+	 */
     public static String exec(String[] command, File directory) {
         StringBuffer response = new StringBuffer();
 
