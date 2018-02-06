@@ -1,5 +1,5 @@
 import ciserver.BuildHandler;
-import ciserver.BuildResponseParser;
+import ciserver.GradleParser;
 
 import ciserver.ShellCommand;
 import org.junit.Test;
@@ -28,8 +28,8 @@ public class RepoTest {
         project = new File(System.getProperty("user.dir")+"//temp-git//gradle-build-scan-quickstart");
         String gradleResponse = BuildHandler.runCheck(project);
 
-        Pattern pSuccess = Pattern.compile(BuildResponseParser.gradleSuccessMsg());
-        Pattern pFail = Pattern.compile(BuildResponseParser.gradleFailMsg());
+        Pattern pSuccess = Pattern.compile(GradleParser.gradleSuccessMsg());
+        Pattern pFail = Pattern.compile(GradleParser.gradleFailMsg());
         Matcher successMatcher = pSuccess.matcher(gradleResponse);
         Matcher failMatcher = pFail.matcher(gradleResponse);
 

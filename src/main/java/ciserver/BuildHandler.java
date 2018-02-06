@@ -45,7 +45,7 @@ public class BuildHandler {
         // Compile and run tests
         System.out.println("tryIntegration@" + lastCommit + ": running gradle");
         String gradleOutput = runCheck(RepoHandler.getRepoFilePath(jsonObject));
-        boolean buildStatus = BuildResponseParser.gradleBuildStatus(gradleOutput);
+        boolean buildStatus = GradleParser.gradleBuildStatus(gradleOutput);
 
         // Prepare build-info parameters
         System.out.println("tryIntegration@" + lastCommit + ": preparing log parameters");
