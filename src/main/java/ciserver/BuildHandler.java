@@ -5,8 +5,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-import static ciserver.RepoHandler.runCheck;
-
 public class BuildHandler {
     /**
      * Perform all the continuous integration tasks
@@ -31,5 +29,19 @@ public class BuildHandler {
 
         // 4th delete repository
         RepoHandler.deleteRepository(jsonObject);
+    }
+
+    /**
+     * Run gradle check on given path project folder
+     * @param path path to the directory of execution
+     * @return Gradle response msg from gradle check command
+     */
+    public static String runCheck(File path){
+        //Create command
+        String[] check_command = new String[2];
+        check_command[0] = "gradle";
+        check_command[1] = "check";
+
+        return ShellCommand.exec(check_command, path);
     }
 }
