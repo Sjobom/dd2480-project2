@@ -125,7 +125,7 @@ public class MainTest {
 	}
     
     @Test
-    public void testRunCheck() {
+    public void testExec() {
         //contract: Tests that ShellCommand class can execute
         //a given command
         String r = ShellCommand.exec("echo test");
