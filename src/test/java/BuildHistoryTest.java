@@ -114,7 +114,7 @@ public class BuildHistoryTest {
                 "    <tr>\n" +
                 "        <th>Commit</th>\n" +
                 "        <td>\n" +
-                "            <a href=\"https://github.com/Sjobom/dd2480-project2/commit/f099a9ea1cfd49eea5f9b969779317d1f06e3f21\">\n" +
+                "            <a href=\"https://github.com/Sjobom/dd2480-project2/commit/"+ commitID + "\">\n" +
                 "                " + commitID + "\n" +
                 "            </a>\n" +
                 "        </td>\n" +
@@ -122,7 +122,7 @@ public class BuildHistoryTest {
                 "    <tr>\n" +
                 "        <th>Contributor</th>\n" +
                 "        <td>\n" +
-                "            <a href=\"https://github.com/Sjobom/dd2480-project2/commits?author=Sjobom\">\n" +
+                "            <a href=\"https://github.com/Sjobom/dd2480-project2/commits?author="+ contributor + "\">\n" +
                 "                " + contributor + "\n" +
                 "            </a>\n" +
                 "        </td>\n" +
@@ -168,7 +168,8 @@ public class BuildHistoryTest {
                     defaultContributor,
                     defaultTimestamp,
                     defaultOutput);
-            // make the assertion
+
+            //assertion to oracle
             assertEquals(oracle, contents);
 
             // remove the file when testing is complete
@@ -203,6 +204,51 @@ public class BuildHistoryTest {
 
             //test getting the build history by get request
             String reguestedBuildHTML = MainTest.LOCALHOST_GET_REQUEST(8080, "build/" + defaultCommitID);
+
+            //ignore spaces and tabs and new lines
+            oracle = oracle.replaceAll("\\s", "");
+            reguestedBuildHTML = reguestedBuildHTML.replaceAll("\\s", "");
+
+            assertEquals(oracle, reguestedBuildHTML);
+
+            file.delete();
+
+        } catch (IOException e) {
+            fail("IOException occurred: " + e);
+        }
+
+    }
+
+    @Test
+    public void testRequestingDifferentCommitBuilds() throws Exception {
+        //contract: tests that a build can be retrieved from CI server by http regeuest for wanted commitID
+        // as given string, shows the issue when template.html was hardcoded for the tags author and commitID
+
+
+        //fix: the template.html was previously hardcoded to have same commit and author, it worked because the previous
+        //tests were the same
+        String contributor = "bergdorf";
+        String commitID = "f099a9ea1cfd49eea5f9b969779317d1f06e3f21";
+        try {
+            CIHistory.storeBuild(
+                    defaultStatus,
+                    commitID,
+                    contributor,
+                    defaultTimestamp,
+                    defaultOutput);
+            String oracle = getOracleHTML(defaultStatus,
+                    commitID,
+                    contributor,
+                    defaultTimestamp,
+                    defaultOutput);
+
+            // read the generated file
+            File file = new File("ci-history/" + commitID + ".html");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String contents = br.lines().collect(Collectors.joining("\n"));
+
+            //test getting the build history by get request
+            String reguestedBuildHTML = MainTest.LOCALHOST_GET_REQUEST(8080, "build/" + commitID);
 
             //ignore spaces and tabs and new lines
             oracle = oracle.replaceAll("\\s", "");
