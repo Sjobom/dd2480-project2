@@ -1,7 +1,7 @@
 # DD2480-project-2
 This repo contains source code and tests for a CI-server that can compile and run tests on a gradle project.
- 
-This is the work of Group 5 in the KTH course DD2480 (2018). 
+
+This is the work of Group 5 in the KTH course DD2480 (2018).
 
 Group members:
 - Anders Sjöbom
@@ -25,7 +25,7 @@ $ gradle test
 ### HTTP API
 Requests to the following URLs (in bold below) will respond with the described functionality:
 
-**/webhook** - if a POST request with a [github push-payload](https://developer.github.com/v3/activity/events/types/#pushevent) 
+**/webhook** - if a POST request with a [github push-payload](https://developer.github.com/v3/activity/events/types/#pushevent)
 is sent to this URL the server will clone the branch specified in the payload and perform integration tasks (a gradle check) on the cloned repo.
 The commit status on github will be updated once this has finished with the builds status and a URL with additional info about the build result.
 
@@ -52,10 +52,10 @@ git cloning programmatically, travis setup, documentation, running shell command
 build report generation, build list, documentation
 
 #### Johan
-Integration tests, git cloning programmatically
+small fixes, refactoring, git cloning programmatically, added tests
 
 #### Albin
-commit status updates, web url interface, build report generation 
+commit status updates, web url interface, build report generation
 
 #### Robert
 gradle setup, running shell commands programmatically, execute gradle check programmatically, parse gradle response, timestamps in /build (not currently in master))
