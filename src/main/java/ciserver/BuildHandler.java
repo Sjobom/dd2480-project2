@@ -24,7 +24,7 @@ public class BuildHandler {
             System.err.println("Error: there was no payload present in the HTTP Request!");
             return;
         }
-
+        
         // Break up the payload into JSON components
         JSONObject jsonObject = new JSONObject(payload);
         String lastCommit = jsonObject.getString("after");
@@ -49,17 +49,8 @@ public class BuildHandler {
 
         // Prepare build-info parameters
         System.out.println("tryIntegration@" + lastCommit + ": preparing log parameters");
-        String contributor = null;
         String timestamp = new Timestamp(System.currentTimeMillis()).toString();
-        JSONArray commits = jsonObject.getJSONArray("commits");
-        for (int i = 0; i < commits.length(); i++) {
-            // Loop through the commits until the contributor of the last commit is found
-            if (commits.getJSONObject(i).getString("id").equals(lastCommit)) {
-                contributor = commits.getJSONObject(i)
-                        .getJSONObject("author")
-                        .getString("name");
-            }
-        }
+        String contributor = getContributor(jsonObject);
 
         // Generate build report
         System.out.println("tryIntegration@" + lastCommit + ": generating build log");
@@ -88,6 +79,15 @@ public class BuildHandler {
         // Print final integration status
         System.out.println("tryIntegration@" + lastCommit + ": integration complete");
         System.out.println("tryIntegration@" + lastCommit + " final status: " + buildStatus);
+    }
+
+    /**
+     * Get the GitHub-username of the pusher
+     * @param jsonObject JSON object with the request from GitHub
+     * @return GitHub username of pusher
+     */
+    public static String getContributor(JSONObject jsonObject) {
+        return jsonObject.getJSONObject("pusher").getString("name");
     }
 
     /**
