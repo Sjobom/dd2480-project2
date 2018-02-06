@@ -82,7 +82,7 @@ public class MainTest {
 			f.createNewFile();
 			String listing = LOCALHOST_GET_REQUEST(8080, "build");
 			assertTrue(listing.contains(
-				"<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/test_build\">test_build</a></td>"
+				"<tr><td id=\"build\" style=\"font-weight: bold;\">link</td>"
 			));
 			f.delete();
 		} catch (Exception e) {
