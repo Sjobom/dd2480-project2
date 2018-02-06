@@ -85,7 +85,7 @@ public class CIHistory {
 		if (dirList != null) {
 			for (File build : dirList) {
 				if (!build.getName().equals("template.html") &&
-					!build.getName().equals("listing.html")) {
+					!build.getName().equals("listing.html") && !build.getName().equals("test_build.html")) {
 
 				    try{
 				        //read contents of build file
@@ -126,11 +126,11 @@ public class CIHistory {
         String template = br.lines().collect(Collectors.joining("\n"));
 
 		String format = "<tr><td id=\"build\" style=\"font-weight: bold;\"><a href=\"/build/%1$s\">%1$s</a></td>" +
-                "<td style=\"font-weight: bold;\">%2$</td></tr>\r\n";
+                "<td style=\"font-weight: bold;\">%2$s</td></tr>\r\n";
 		Map<String, String> prevBuilds = getBuildList();
 		StringBuilder table = new StringBuilder();
 		
-		for (String build : prevBuilds.values()) {
+		for (String build : prevBuilds.keySet()) {
 			table.append(String.format(format, build, prevBuilds.get(build)));
 		}
 
