@@ -6,8 +6,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 
 public class BuildHandler {
+
+    private static final String SERVER_HOSTNAME = "207.154.221.239:8080";
+    private static final String BUILD_API = SERVER_HOSTNAME + "/build";
+
     /**
      * Perform all the continuous integration tasks
 	 * @param baseRequest	Base request object
@@ -19,14 +24,58 @@ public class BuildHandler {
             System.err.println("Error: there was no payload present in the HTTP Request!");
             return;
         }
+
+        // Break up the payload into JSON components
         JSONObject jsonObject = new JSONObject(payload);
-        // 1st clone the repository
+        String lastCommit = jsonObject.getString("after");
+        String buildURL = BUILD_API + "/" + lastCommit;
+
+        // Set CI status to pending
+        try {
+            StatusHandler.sendStatus(StatusHandler.PENDING, buildURL, lastCommit);
+        } catch (IOException e) {
+            System.err.println("Error setting PENDING status: " + e);
+        }
+
+        // Clone the repository
         RepoHandler.cloneRepository(jsonObject);
 
-        //2nd compile and run tests
-        String checkResponse = runCheck(RepoHandler.getRepoFilePath(jsonObject));
+        // Compile and run tests
+        String gradleOutput = runCheck(RepoHandler.getRepoFilePath(jsonObject));
+        boolean buildStatus = BuildResponseParser.gradleBuildStatus(gradleOutput);
 
-        // 4th delete repository
+        // Prepare build-info parameters
+        String contributor = null;
+        String timestamp = new Timestamp(System.currentTimeMillis()).toString();
+        JSONArray commits = jsonObject.getJSONArray("commits");
+        for (int i = 0; i < commits.length(); i++) {
+            // Loop through the commits until the contributor of the last commit is found
+            if (commits.getJSONObject(i).getString("id").equals(lastCommit)) {
+                contributor = commits.getJSONObject(i)
+                        .getJSONObject("author")
+                        .getString("name");
+            }
+        }
+
+        // Generate build report
+        try {
+            CIHistory.storeBuild(buildStatus, lastCommit, contributor, timestamp, gradleOutput);
+        } catch (IOException e) {
+            System.err.println("Error storing build-file: " + e);
+        }
+
+        // Set CI status to either success/failure
+        try {
+            if (buildStatus) {
+                StatusHandler.sendStatus(StatusHandler.SUCCESS, buildURL, lastCommit);
+            } else {
+                StatusHandler.sendStatus(StatusHandler.FAILURE, buildURL, lastCommit);
+            }
+        } catch (IOException e) {
+            System.err.println("Error setting SUCCESS/FAILURE status: " + e);
+        }
+
+        // Delete repository
         RepoHandler.deleteRepository(jsonObject);
     }
 
