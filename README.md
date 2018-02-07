@@ -64,3 +64,4 @@ gradle setup, running shell commands programmatically, execute gradle check prog
 UPDATE
 UPDATE2
 UPDATE3
+TEST
