@@ -47,11 +47,11 @@ public class BuildHandler {
 
         // Clone the repository
         System.out.println("tryIntegration@" + lastCommit + ": cloning repo");
-        RepoHandler.cloneRepository(jsonObject);
+        GitHandler.cloneRepository(jsonObject);
 
         // Compile and run tests
         System.out.println("tryIntegration@" + lastCommit + ": running gradle");
-        String gradleOutput = runCheck(RepoHandler.getRepoFilePath(jsonObject));
+        String gradleOutput = runCheck(GitHandler.getRepoFilePath(jsonObject));
         boolean buildStatus = GradleParser.gradleBuildStatus(gradleOutput);
 
         // Prepare build-info parameters
@@ -81,7 +81,7 @@ public class BuildHandler {
 
         // Delete repository
         System.out.println("tryIntegration@" + lastCommit + ": removing repository");
-        RepoHandler.deleteRepository(jsonObject);
+        GitHandler.deleteRepository(jsonObject);
 
         // Print final integration status
         System.out.println("tryIntegration@" + lastCommit + ": integration complete");
