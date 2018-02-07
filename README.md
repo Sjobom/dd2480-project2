@@ -37,7 +37,7 @@ The commit status on github will be updated once this has finished with the buil
 * The class ContinousIntegrationServer is the core of the CI server. It contains the handler for HTTP requests to the server
 * The functionality of the server is categorized in the different handler-classes
   * The BuildHandler tries to do the integration by calling other handlers and running a gradle check
-  * The RepoHandler concerns cloning and deleting git repositories
+  * The GitHandler concerns cloning and deleting git repositories
   * CIHistory contains business logic to create persistent reports of the builds
   * StatusHandler has business logic to update the commit status when a build is finished
   * ShellCommand has methods to execute commands in the host's shell
