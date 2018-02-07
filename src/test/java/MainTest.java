@@ -108,6 +108,29 @@ public class MainTest {
         }
     }
 
+    @Test
+    public void testGradleParser(){
+        //Contract: Test that GradleParser parses succeeding and failing gradle response correctly
+        try{
+            File file = new File("testData/gradle_success.txt");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String contents = br.lines().collect(Collectors.joining("\n"));
+            boolean res = GradleParser.gradleBuildStatus(contents);
+            assertTrue(res);
+
+            file = new File("testData/gradle_fail.txt");
+            br = new BufferedReader(new FileReader(file));
+            contents = br.lines().collect(Collectors.joining("\n"));
+            res = GradleParser.gradleBuildStatus(contents);
+            assertFalse(res);
+
+            br.close();
+        }catch(Exception e) {
+            fail(e.toString());
+        }
+
+    }
+
 	@Test
 	public void testBuildList() {
 		// Contract: Test that the server lists build urls properly
@@ -125,7 +148,6 @@ public class MainTest {
 	}
     
     @Test
-
     public void testExec() {
         //contract: Tests that ShellCommand class can execute
         //a given command
