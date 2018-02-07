@@ -41,6 +41,7 @@ The commit status on github will be updated once this has finished with the buil
   * CIHistory contains business logic to create persistent reports of the builds
   * StatusHandler has business logic to update the commit status when a build is finished
   * ShellCommand has methods to execute commands in the host's shell
+  * gradleParser is a class used to parse gradle output to determine the state of the build
 
 For the detailed API documentation check out the javadoc in the root of the repo.
 ## Statement of Contributions
@@ -55,7 +56,7 @@ build report generation, build list, documentation
 small fixes, refactoring, git cloning programmatically, added tests
 
 #### Albin
-commit status updates, web url interface, build report generation
+commit status updates via the GitHub API, web url interface, build report generation
 
 #### Robert
 gradle setup, running shell commands programmatically, execute gradle check programmatically, parse gradle response, timestamps in /build (not currently in master))
